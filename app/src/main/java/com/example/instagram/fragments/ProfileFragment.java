@@ -1,18 +1,83 @@
 package com.example.instagram.fragments;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.instagram.LoginActivity;
 import com.example.instagram.Post;
+import com.example.instagram.PostsAdapter;
+import com.example.instagram.ProfilePostsAdapter;
+import com.example.instagram.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileFragment extends PostsFragment {
+public class ProfileFragment extends Fragment {
+
+    public static final String TAG = "ProfileFragment";
+    protected RecyclerView rvProfilePosts;
+    protected Button btnLogout;
+    protected ProfilePostsAdapter adapter;
+    protected List<Post> allPosts;
+
+    public ProfileFragment() {
+        // Required empty public constructor
+    }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_profile, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        rvProfilePosts = view.findViewById(R.id.rvProfilePosts);
+        btnLogout = view.findViewById(R.id.btnLogout);
+
+        allPosts = new ArrayList<>();
+        adapter = new ProfilePostsAdapter(getContext(), allPosts);
+
+        rvProfilePosts.setAdapter(adapter);
+        rvProfilePosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseUser.logOut();
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                Intent i = new Intent(getActivity(), LoginActivity.class);
+                startActivity(i);
+            }
+        });
+
+        queryPosts();
+
+        // RV steps
+        // 0. layout for one row
+        // 1. adapter
+        // 2. data source
+        // 3. set adapter and layout manager on RV
+    }
+
     protected void queryPosts() {
         // specify what type of data we want to query - Post.class
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
