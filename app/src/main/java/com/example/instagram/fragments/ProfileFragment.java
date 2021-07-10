@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.instagram.LoginActivity;
 import com.example.instagram.Post;
 import com.example.instagram.PostsAdapter;
@@ -22,8 +25,11 @@ import com.example.instagram.ProfilePostsAdapter;
 import com.example.instagram.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +38,8 @@ public class ProfileFragment extends Fragment {
 
     public static final String TAG = "ProfileFragment";
     protected RecyclerView rvProfilePosts;
+    protected ImageView ivProfileImage;
+    protected TextView tvProfileName;
     protected Button btnLogout;
     protected ProfilePostsAdapter adapter;
     protected List<Post> allPosts;
@@ -52,6 +60,10 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rvProfilePosts = view.findViewById(R.id.rvProfilePosts);
         btnLogout = view.findViewById(R.id.btnLogout);
+        tvProfileName = view.findViewById(R.id.tvProfileName);
+
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        tvProfileName.setText(currentUser.getUsername());
 
         allPosts = new ArrayList<>();
         adapter = new ProfilePostsAdapter(getContext(), allPosts);

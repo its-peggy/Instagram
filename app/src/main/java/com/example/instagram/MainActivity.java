@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.action_profile:
                     default:
-                        // TODO: update fragment
                         // Toast.makeText(MainActivity.this, "Profile!", Toast.LENGTH_SHORT).show();
                         fragment = new ProfileFragment();
                         break;
@@ -55,9 +54,6 @@ public class MainActivity extends AppCompatActivity {
         });
         // set default selection
         bottomNavigationView.setSelectedItemId(R.id.action_home);
-
-//        Intent i = new Intent(this, FeedActivity.class);
-//        startActivity(i);
 
     }
 
